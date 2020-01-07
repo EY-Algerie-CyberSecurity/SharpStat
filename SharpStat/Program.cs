@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.DirectoryServices;
 using System.Management;
@@ -19,6 +20,7 @@ namespace SharpStat
             Dictionary<string, string> args = ArgParser.Parse(cargs);
             if (args["computers"] == "")
             {
+
                 args["computers"] = GetDomainComputers(args);
                 if (args["computers"] == "")
                 {
@@ -94,6 +96,7 @@ namespace SharpStat
             }
             return "";
         }
+        
         public static string BuildDN(string domain)
         {
             string[] parts = domain.Split('.');
@@ -121,7 +124,7 @@ namespace SharpStat
                 ManagementPath managementPath = new ManagementPath("Win32_Process");
                 ManagementClass processClass = new ManagementClass(scope, managementPath, objectGetOptions);
                 ManagementBaseObject inParams = processClass.GetMethodParameters("Create");
-                inParams["CommandLine"] = "cmd.exe /c netstat -n > C:\\" + file_to_save;
+                inParams["CommandLine"] = "cmd.exe /c netstat -ano > C:\\" + file_to_save;
                 ManagementBaseObject outParams = processClass.InvokeMethod("Create", inParams, null);
                 if (outParams["returnValue"].ToString() == "0")
                 {
@@ -149,16 +152,33 @@ namespace SharpStat
         }
 
         public static void ParseNetstat(string contents)
-        {
+        {      
+            var csv = new StringBuilder();
+            String entete= "ProTo,Local Address,Local Ports,Foreign Address,Foreign Ports,State,PID\r\n";
+            csv.AppendLine(entete);
             foreach (string line in contents.Split('\n'))
-            {
+            {  
                 
                 string[] parts = System.Text.RegularExpressions.Regex.Split(line, @"\s{1,}");
                 if (parts.Length >= 5 && parts[2].IndexOf("[") == -1 && parts[2].IndexOf("Local") == -1)
                 {
-                    Console.WriteLine(parts[2] + " has " + parts[4] + " connection to " + parts[3]);
+                    //Console.WriteLine(parts[2] + " has " + parts[4] + " connection to " + parts[3]);
+                    String text= parts[1]+","+parts[2].Split(':')[0]+","+parts[2].Split(':')[1]+","+parts[3].Split(':')[0]+","+parts[3].Split(':')[1]+","+parts[4]+","+parts[5]+"\r\n";//+parts[1]+" :@L"+parts[2].Split(':')[0]+" :pL"+parts[2].Split(':')[1]+" :@R"+parts[3]+":"+parts[4].Split(':')[0]+" :pR"+parts[4].Split(':')[1];
+                    Console.WriteLine(parts);
+                    if (parts[1]=="TCP")
+                    {
+                        if(parts[2].Split(':')[0]!="127.0.0.1" & parts[2].Split(':')[0]!="[::]" & parts[2].Split(':')[0]!="0.0.0.0")
+                            {
+                            Console.WriteLine("WritedOut"+parts[2].Split(':')[0]);
+                            System.IO.File.AppendAllText(@"C:\Users\admin\Desktop\debug_test.txt", text);
+                            csv.AppendLine(text);
+                            }
+                    }
+                    Console.WriteLine(text);
                 }
             }
+    
+            File.WriteAllText(@"C:\Users\admin\Desktop\debug.csv", csv.ToString());
         }
 
         public static bool PortScan(string system)
@@ -195,5 +215,5 @@ namespace SharpStat
             }
             return true;
         }
-    }
+    }   
 }
