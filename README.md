@@ -33,7 +33,7 @@ While this isn't the stealthiest of scripts (because of the cmd.exe  execution a
 
 ## Screenshot
 
-![img](https://github.com/EY-Algerie-CyberSecurity/SharpStat/tree/mehdi_DEV/SharpStat/img/Capture.PNG)
+(https://github.com/EY-Algerie-CyberSecurity/SharpStat/tree/mehdi_DEV/SharpStat/img/Capture.PNG)
 
 ## OnDevlopment
 
