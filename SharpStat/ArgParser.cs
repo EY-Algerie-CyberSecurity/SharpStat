@@ -80,10 +80,6 @@ namespace SharpStat
             Console.WriteLine("         SharpStat.exe -file \"C:\\Users\\Public\\test.txt\" -domain lab.raikia.com -dc lab.raikia.com");
             Console.WriteLine("         SharpStat.exe -file \"C:\\Users\\Public\\test.txt\" -computers \"wkstn7.lab.raikia.com,wkstn10.lab.raikia.com\"");
             Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine("    Contact Info (Chris King):");
-            Console.WriteLine("       If you have questions, hit me up at raikiasec@gmail.com or @raikiasec");
-            Console.WriteLine();
             Environment.Exit(1);
         }
     }
