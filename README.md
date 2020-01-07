@@ -1,10 +1,10 @@
 # SharpStat
 
-C# utility that uses WMI to run "cmd.exe /c netstat -n", save the output to a file, then use SMB to read and delete the file remotely
+C# utility that uses WMI to run "cmd.exe /c netstat -ano", save the output to a file, then use SMB to read and delete the file remotely
 
 ## Description
 
-This script will attempt to connect to all the supplied computers and use WMI to execute `cmd.exe /c netstat -n > <file>`. The file the output is saved to is specified by '-file'. Once the netstat command is running, the output is read via remote SMB call and then deleted.
+This script will attempt to connect to all the supplied computers and use WMI to execute `cmd.exe /c netstat -ano > <file>`. The file the output is saved to is specified by '-file'. Once the netstat command is running, the output is read via remote SMB call and then deleted.
 
 While this isn't the stealthiest of scripts (because of the cmd.exe  execution and saving to a file), sometimes you gotta do what you gotta do. An alternative would be to use WMI to remotely query netstat information, but that WMI class is only available on Win10+ systems, which isn't ideal.  This solution at least works for all levels of operating systems.
 
@@ -24,7 +24,8 @@ While this isn't the stealthiest of scripts (because of the cmd.exe  execution a
 
 
 ## Examples
-
+          
+         sharpStat.exe -file "C:\Users\Public\test.txt" -computers 127.0.0.1
          SharpStat.exe -file "C:\Users\Public\test.txt" -domain lab.raikia.com -dc lab.raikia.com
          SharpStat.exe -file "C:\Users\Public\test.txt" -computers "wkstn7.lab.raikia.com,wkstn10.lab.raikia.com"
 
@@ -32,10 +33,13 @@ While this isn't the stealthiest of scripts (because of the cmd.exe  execution a
 
 ![img](https://i.imgur.com/IYsuRJG.png)
 
-## Contact
+## OnDevlopment
+- Working on the file out (txt, csv)
+- Working on merge that result file with Neo4j (Engineered for Connected Data) 
 
-If you have questions or issues, hit me up at raikiasec@gmail.com or @raikiasec
 
+## Original work
+https://github.com/Raikia/SharpStat
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
