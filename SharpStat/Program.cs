@@ -181,20 +181,18 @@ namespace SharpStat
                 string[] parts = System.Text.RegularExpressions.Regex.Split(line, @"\s{1,}");
                 if (parts.Length >= 5 && parts[2].IndexOf("[") == -1 && parts[2].IndexOf("Local") == -1)
                 {
-                    //Console.WriteLine(parts[2] + " has " + parts[4] + " connection to " + parts[3]);
-                    String text= parts[1]+","+parts[2].Split(':')[0]+","+parts[2].Split(':')[1]+","+parts[3].Split(':')[0]+","+parts[3].Split(':')[1]+","+parts[4]+","+parts[5]+"\r\n";//+parts[1]+" :@L"+parts[2].Split(':')[0]+" :pL"+parts[2].Split(':')[1]+" :@R"+parts[3]+":"+parts[4].Split(':')[0]+" :pR"+parts[4].Split(':')[1];
-                    Console.WriteLine(parts);
+                    
+                    String text= parts[1]+","+parts[2].Split(':')[0]+","+parts[2].Split(':')[1]+","+parts[3].Split(':')[0]+","+parts[3].Split(':')[1]+","+parts[4]+","+parts[5];
                     if (parts[1]=="TCP")
                     {
-                        if(parts[2].Split(':')[0]!="127.0.0.1" & parts[2].Split(':')[0]!="[::]" & parts[2].Split(':')[0]!="0.0.0.0")
+                        if(parts[2].Split(':')[0]!="127.0.0.1" & parts[2].Split(':')[0]!="[::]" & parts[2].Split(':')[0]!="0.0.0.0" & parts[2].Split(':')[0]!=parts[3].Split(':')[0] & parts[3].Split(':')[0]!="0.0.0.0")
                             {
-                            Console.WriteLine("WritedOut"+parts[2].Split(':')[0]);
                             cpath = path + ".txt";
-                            System.IO.File.AppendAllText(cpath, text);
+                            Console.WriteLine(parts[2] + " has " + parts[4] + " " +parts[1] + " connection to " + parts[3] + " on " + parts[5] + " PID");
+                            System.IO.File.AppendAllText(cpath, text+"\r\n");
                             csv.AppendLine(text);
                             }
-                    }
-                    Console.WriteLine(text);
+                    }    
                 }
             }
             cpath = path + ".csv";
