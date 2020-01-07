@@ -4,3 +4,9 @@ B:\do_not_scan\Devel\SharpStat\SharpStat\obj\Debug\SharpStat.csprojAssemblyRefer
 B:\do_not_scan\Devel\SharpStat\SharpStat\obj\Debug\SharpStat.csproj.CoreCompileInputs.cache
 B:\do_not_scan\Devel\SharpStat\SharpStat\obj\Debug\SharpStat.exe
 B:\do_not_scan\Devel\SharpStat\SharpStat\obj\Debug\SharpStat.pdb
+C:\Users\admin\Source\Repos\EY-Algerie-CyberSecurity\SharpStat\SharpStat\bin\Debug\SharpStat.exe.config
+C:\Users\admin\Source\Repos\EY-Algerie-CyberSecurity\SharpStat\SharpStat\bin\Debug\SharpStat.exe
+C:\Users\admin\Source\Repos\EY-Algerie-CyberSecurity\SharpStat\SharpStat\bin\Debug\SharpStat.pdb
+C:\Users\admin\Source\Repos\EY-Algerie-CyberSecurity\SharpStat\SharpStat\obj\Debug\SharpStat.csprojAssemblyReference.cache
+C:\Users\admin\Source\Repos\EY-Algerie-CyberSecurity\SharpStat\SharpStat\obj\Debug\SharpStat.exe
+C:\Users\admin\Source\Repos\EY-Algerie-CyberSecurity\SharpStat\SharpStat\obj\Debug\SharpStat.pdb

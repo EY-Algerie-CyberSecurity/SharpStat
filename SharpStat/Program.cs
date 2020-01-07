@@ -14,9 +14,11 @@ namespace SharpStat
         static void Main(string[] cargs)
         {
             Console.WriteLine();
-            Console.WriteLine("         SharpStat");
-            Console.WriteLine("       By @raikiasec");
-            Console.WriteLine("----------------------------");
+            Console.WriteLine("                 SharpStat");
+            Console.WriteLine("             By @raikiasec");
+            Console.WriteLine();
+            Console.WriteLine("       Revisited By EY Algerie CyberSecurity");
+            Console.WriteLine("---------------------------------------------------");
             Dictionary<string, string> args = ArgParser.Parse(cargs);
             if (args["computers"] == "")
             {
@@ -42,6 +44,21 @@ namespace SharpStat
             {
                 args["file"] = args["file"].Replace("C:\\", "");
             }
+            //Output_pathfile
+             if (args["output"] == "")
+            {
+                Console.WriteLine("Error: You must specify a file location to save the output");
+                Environment.Exit(1);
+            }
+            else if (args["output"].IndexOf("C:\\") == -1)
+            {
+                Console.WriteLine("Error: File location must begin with C:\\");
+                Environment.Exit(1);
+            }
+            else
+            {
+                args["output"] = args["output"].Replace("C:\\", "");
+            }
 
             foreach (string target in args["computers"].Split(','))
             {
@@ -51,7 +68,7 @@ namespace SharpStat
                     if (RunWmiNetstat(target, args["file"]))
                     {
                         Thread.Sleep(1000);
-                        ReadAndDeleteResults(target, args["file"]);
+                        ReadAndDeleteResults(target, args["file"], args["output"]);
                     }
                 }
             }
@@ -138,7 +155,7 @@ namespace SharpStat
             return false;
         }
 
-        public static bool ReadAndDeleteResults(string system, string file_to_grab)
+        public static bool ReadAndDeleteResults(string system, string file_to_grab, string output_pathfile)
         {
             System.IO.FileStream stream = System.IO.File.OpenRead("\\\\"+system+"\\C$\\"+file_to_grab);
             string contents = "";
@@ -146,16 +163,18 @@ namespace SharpStat
             {
                 contents = sr.ReadToEnd();
             }
-            ParseNetstat(contents);
+            ParseNetstat(contents, output_pathfile);
             System.IO.File.Delete("\\\\" + system + "\\C$\\" + file_to_grab);
             return true;
         }
 
-        public static void ParseNetstat(string contents)
+        public static void ParseNetstat(string contents, string output_pathfile)
         {      
             var csv = new StringBuilder();
             String entete= "ProTo,Local Address,Local Ports,Foreign Address,Foreign Ports,State,PID\r\n";
             csv.AppendLine(entete);
+            String path = "C:\\" + output_pathfile;
+            String cpath = "";
             foreach (string line in contents.Split('\n'))
             {  
                 
@@ -170,15 +189,16 @@ namespace SharpStat
                         if(parts[2].Split(':')[0]!="127.0.0.1" & parts[2].Split(':')[0]!="[::]" & parts[2].Split(':')[0]!="0.0.0.0")
                             {
                             Console.WriteLine("WritedOut"+parts[2].Split(':')[0]);
-                            System.IO.File.AppendAllText(@"C:\Users\admin\Desktop\debug_test.txt", text);
+                            cpath = path + ".txt";
+                            System.IO.File.AppendAllText(cpath, text);
                             csv.AppendLine(text);
                             }
                     }
                     Console.WriteLine(text);
                 }
             }
-    
-            File.WriteAllText(@"C:\Users\admin\Desktop\debug.csv", csv.ToString());
+            cpath = path + ".csv";
+            File.WriteAllText(cpath, csv.ToString());
         }
 
         public static bool PortScan(string system)
