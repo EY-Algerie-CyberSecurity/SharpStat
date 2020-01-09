@@ -1,6 +1,6 @@
 # SharpStat
 
-C# utility that uses WMI to run "cmd.exe /c netstat -ano", save the output to a file, then use SMB to read and delete the file remotely
+C# utility that uses WMI to run "cmd.exe /c netstat -n", save the output to a file, then use SMB to read and delete the file remotely
 
 ## Description
 
@@ -42,7 +42,6 @@ While this isn't the stealthiest of scripts (because of the cmd.exe  execution a
 
 
 ## Forked from
-
 https://github.com/Raikia/SharpStat
 
 ## License
