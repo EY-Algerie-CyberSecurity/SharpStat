@@ -168,33 +168,57 @@ namespace SharpStat
             return true;
         }
 
-        public static void ParseNetstat(string contents, string output_pathfile)
+public static void ParseNetstat(string contents, string output_pathfile)
         {      
             var csv = new StringBuilder();
             String entete= "ProTo,Local Address,Local Ports,Foreign Address,Foreign Ports,State,PID\r\n";
             csv.AppendLine(entete);
+            String tmp = "", link = "";
             String path = "C:\\" + output_pathfile;
             String cpath = "";
+            List<String> ips = new List<String>();
+            List<String> links = new List<string>();
             foreach (string line in contents.Split('\n'))
             {  
                 
                 string[] parts = System.Text.RegularExpressions.Regex.Split(line, @"\s{1,}");
                 if (parts.Length >= 5 && parts[2].IndexOf("[") == -1 && parts[2].IndexOf("Local") == -1)
                 {
+                	
+                    String tcsv= parts[1]+","+parts[2].Split(':')[0]+","+parts[2].Split(':')[1]+","+parts[3].Split(':')[0]+","+parts[3].Split(':')[1]+","+parts[4]+","+parts[5];
                     
-                    String text= parts[1]+","+parts[2].Split(':')[0]+","+parts[2].Split(':')[1]+","+parts[3].Split(':')[0]+","+parts[3].Split(':')[1]+","+parts[4]+","+parts[5];
                     if (parts[1]=="TCP")
                     {
                         if(parts[2].Split(':')[0]!="127.0.0.1" & parts[2].Split(':')[0]!="[::]" & parts[2].Split(':')[0]!="0.0.0.0" & parts[2].Split(':')[0]!=parts[3].Split(':')[0] & parts[3].Split(':')[0]!="0.0.0.0")
                             {
-                            cpath = path + ".txt";
+
+                            String text= "";
+                            if (ips.Contains(parts[2].Split(':')[0]) == false){
+                                text = text + "(x"+md5.getMD5(parts[2].Split(':')[0])+":workstation{ip:'"+parts[2].Split(':')[0]+"'}), ";
+                                ips.Add(parts[2].Split(':')[0]);
+                            }
+                            //ips.ForEach(Console.WriteLine);
+                            if (ips.Contains(parts[3].Split(':')[0]) == false){
+                                text = text + "(x"+md5.getMD5(parts[3].Split(':')[0])+":workstation{ip:'"+parts[3].Split(':')[0]+"'}), ";
+                                 ips.Add(parts[3].Split(':')[0]);
+                            }
+                            link = "(x"+md5.getMD5(parts[2].Split(':')[0])+")-[:CONNECT{proto:'"+parts[1]+"',port:'"+parts[3].Split(':')[1]+
+                            "',stat:'"+parts[4]+"',pid:'"+parts[5]+"'}]->(x"+md5.getMD5(parts[3].Split(':')[0])+"),";
+                            if(links.Contains(link) == false){
+                                text = text + link + "\r\n";
+                                links.Add(link);
+                            }
+                            
                             Console.WriteLine(parts[2] + " has " + parts[4] + " " +parts[1] + " connection to " + parts[3] + " on " + parts[5] + " PID");
-                            System.IO.File.AppendAllText(cpath, text+"\r\n");
-                            csv.AppendLine(text);
+                            tmp = tmp + text; 
+                            csv.AppendLine(tcsv);
                             }
                     }    
                 }
             }
+            cpath = path + ".txt";
+            String final = "CREATE " + tmp.Substring(0, tmp.Length-3);
+            System.IO.File.AppendAllText(cpath, final);
             cpath = path + ".csv";
             File.WriteAllText(cpath, csv.ToString());
         }
